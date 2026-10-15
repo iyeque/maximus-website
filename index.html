@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAXIMUS — Max Wigman · Engineer & Author</title>
+<meta name="description" content="Maximus (Max Wigman) — full-stack engineer at Digital Guardian Wellness, author of The Nine Stitches and A Burden of One's Choice. Open-source advocate.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Max Wigman","alternateName":"Maximus",
+"email":"","jobTitle":"Full Stack Engineer",
+"worksFor":{"@type":"Organization","name":"Digital Guardian Wellness","url":"https://digitalguardianwellness.org"},
+"sameAs":["https://github.com/iyeque","https://www.linkedin.com/in/max-wigman-61a19a22b","https://www.amazon.com/dp/B0FJDMPZ9Q","https://books2read.com/u/mdBLN5"]}
+</script>
+<style>
+:root{
+  --bg:#08080d; --panel:#101018; --line:rgba(255,255,255,.09);
+  --text:#ededf2; --muted:#8f8fa3;
+  --teal:#2dd4a7; --teal-dim:rgba(45,212,167,.12);
+  --amber:#e8b23a; --amber-dim:rgba(232,178,58,.1);
+  --pw:380px; --ph:500px;            /* page size */
+  --fd:'Space Grotesk',sans-serif; --fb:'Inter',sans-serif; --fm:'JetBrains Mono',monospace;
+  --fs:'Cormorant Garamond',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto;scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}
+/* ---------- BACKGROUND (static, light) ---------- */
+body{background:
+    radial-gradient(1100px 720px at 9% 28%,rgba(45,212,167,.045),transparent 60%),
+    radial-gradient(900px 620px at 94% 92%,rgba(232,178,58,.035),transparent 60%),
+    var(--bg);color:var(--text);font-family:var(--fb);font-weight:300;line-height:1.65;overflow-x:hidden}
+::selection{background:var(--teal);color:#08080d}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* the reading lamp: a soft glow that follows the cursor */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:55;
+  background:radial-gradient(560px circle at var(--mx,50%) var(--my,38%),rgba(45,212,167,.055),transparent 65%)}
+a{color:var(--teal)}
+
+/* ---------- NAV ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:70;display:flex;justify-content:flex-end;align-items:center;
+  padding:22px 4vw;background:transparent;border-bottom:0;pointer-events:none}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.1rem;letter-spacing:.26em;color:var(--text);text-decoration:none}
+.logo span{color:var(--teal)}
+.navlinks{display:none}
+.navlinks a{color:var(--muted);text-decoration:none;font-family:var(--fm);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;transition:color .25s;cursor:pointer}
+.navlinks a:hover,.navlinks a.active{color:var(--teal)}
+@media(max-width:760px){.navlinks{gap:16px}.navlinks a{font-size:.62rem;letter-spacing:.06em}}
+
+/* ---------- AUDIO TOGGLE ---------- */
+#audioBtn{display:none;position:fixed;bottom:26px;right:26px;z-index:70;width:52px;height:52px;border-radius:50%;
+  background:rgba(16,16,24,.8);border:1px solid var(--line);color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(8px)}
+#audioBtn:hover{border-color:var(--teal);color:var(--teal)}
+#audioBtn.on{border-color:var(--teal);color:var(--teal);box-shadow:0 0 24px rgba(45,212,167,.35)}
+#audioBtn svg{width:20px;height:20px;fill:currentColor}
+#audioBtn .bars{display:none;align-items:flex-end;gap:2.5px;height:16px}
+#audioBtn .bars i{width:3px;background:var(--teal);animation:eq 0.9s ease-in-out infinite}
+#audioBtn .bars i:nth-child(2){animation-delay:.2s}#audioBtn .bars i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:5px}50%{height:16px}}
+#audioBtn.on .note{display:none}#audioBtn.on .bars{display:flex}
+/* ---------- LOOP TOGGLE (sits left of the music button) ---------- */
+#loopBtn{display:none;position:fixed;bottom:26px;right:90px;z-index:70;width:52px;height:52px;border-radius:50%;
+  background:rgba(16,16,24,.8);border:1px solid var(--line);color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(8px)}
+#loopBtn:hover{border-color:var(--teal);color:var(--teal)}
+#loopBtn.on{border-color:var(--teal);color:var(--teal);box-shadow:0 0 24px rgba(45,212,167,.35)}
+#loopBtn.off{opacity:.45}
+#loopBtn svg{width:20px;height:20px;fill:currentColor;transition:transform .45s cubic-bezier(.22,1,.36,1)}
+#loopBtn.off svg{transform:rotate(-135deg) scale(.82)}
+
+/* ---------- SCROLL PROGRESS BAR ---------- */
+#prog{display:none;position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--amber));z-index:80;width:0%}
+
+/* ---------- HERO / JOURNEY SPACERS ---------- */
+#hero{height:100vh;position:relative;z-index:2;pointer-events:none}
+.hero-ui{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:110px 4vw 40px}
+.hero-top{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.68rem;letter-spacing:.28em;color:var(--muted);text-transform:uppercase}
+.hero-top{display:none}
+.hero-bottom{text-align:center;font-family:var(--fm);font-size:.68rem;letter-spacing:.32em;color:var(--muted);text-transform:uppercase;animation:floaty 2.8s ease-in-out infinite}
+@keyframes floaty{50%{transform:translateY(7px)}}
+#journey{height:860vh;position:relative;z-index:2;pointer-events:none}
+.kicker{font-family:var(--fm);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.kicker::before{content:"";width:34px;height:1px;background:var(--teal)}
+.kicker.center{justify-content:center}.kicker.center::before{display:none}
+.mail{font-family:var(--fm);color:var(--teal);text-decoration:none;font-size:1rem;border-bottom:1px dashed rgba(45,212,167,.4)}
+.socials{position:relative;width:224px;height:224px;margin:0 auto}
+.socials a{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:border-color .3s,color .3s,box-shadow .3s;color:var(--muted)}
+.socials a:hover{border-color:var(--teal);color:var(--teal);box-shadow:0 0 18px rgba(45,212,167,.25)}
+.socials a:nth-child(1){transform:rotate(-90deg) translate(90px) rotate(90deg)}
+.socials a:nth-child(2){transform:rotate(-18deg) translate(90px) rotate(18deg)}
+.socials a:nth-child(3){transform:rotate(54deg) translate(90px) rotate(-54deg)}
+.socials a:nth-child(4){transform:rotate(126deg) translate(90px) rotate(-126deg)}
+.socials a:nth-child(5){transform:rotate(198deg) translate(90px) rotate(-198deg)}
+.socials svg{width:19px;height:19px;fill:currentColor}
+.colophon .pg-content{justify-content:center;align-items:center}
+.copy{font-family:var(--fm);font-size:.68rem;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--line);padding-top:28px}
+.loop-hint{text-align:center;font-family:var(--fm);font-size:.66rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-top:40px;opacity:.6}
+
+/* ---------- THE BOOK ---------- */
+.scene{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;perspective:1700px;pointer-events:none}
+.book{position:relative;width:calc(var(--pw)*2);height:var(--ph);transform-style:preserve-3d;will-change:transform;transform:scale(.66) translateX(-180px) rotateX(8deg) rotateY(-10deg)}
+/* inside back cover (philosophy) — printed on the reverse of the last page */
+.pg.leftpage.bcpg{background:linear-gradient(160deg,#141320,#0a0a12);border-radius:2px 14px 14px 2px;box-shadow:0 40px 80px rgba(0,0,0,.6)}
+.pg.leftpage.bcpg .back-copy{position:absolute;inset:10px;padding:22px;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(45,212,167,.3);border-radius:8px}
+.pg.leftpage.bcpg .back-copy .q{font-family:var(--fs);font-size:1.18rem;line-height:1.35}
+.pg.leftpage.bcpg .back-copy .q em{font-style:italic;color:var(--teal)}
+.pg.leftpage.bcpg .back-copy .g{margin-top:16px;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:7px}
+.pg.leftpage.bcpg .back-copy .g div{font-size:.58rem;color:var(--muted);line-height:1.35}
+.pg.leftpage.bcpg .back-copy .g b{color:var(--amber);font-family:var(--fm);font-weight:600;font-size:.58rem;letter-spacing:.1em;margin-right:6px}
+.pageblock{position:absolute;left:50%;top:0;bottom:0;right:0;border-radius:2px 8px 8px 2px;transform:translateZ(0.4px);
+  background:repeating-linear-gradient(90deg,#d8d4c8 0 2px,#c9c5b9 2px 4px);
+  backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.base,.leaf{position:absolute;left:50%;top:0;width:50%;height:100%;transform-style:preserve-3d}
+.leaf,.base{transform-origin:left center;will-change:transform}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:var(--panel)}
+.face.back{transform:rotateY(180deg)}
+.pg{position:absolute;inset:0;padding:26px 26px 22px;display:flex;flex-direction:column;overflow:hidden}
+.pg::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,rgba(255,255,255,.05),transparent 40%)}
+/* spine gutter shading — left pages darken toward their right (spine) edge,
+   right pages toward their left edge */
+.pg.leftpage::before,.pg.rightpage::before{content:"";position:absolute;top:0;bottom:0;width:30px;pointer-events:none;z-index:2}
+.pg.leftpage::before{right:0;background:linear-gradient(270deg,transparent,rgba(0,0,0,.30))}
+.pg.rightpage::before{left:0;background:linear-gradient(90deg,transparent,rgba(0,0,0,.30))}
+/* chromatic aberration on text while a page is mid-turn */
+.book.flipping .pg h3,.book.flipping .pg p,.book.flipping .pg .mini,.book.flipping .bk h4,.book.flipping .repo b{
+  text-shadow:.7px 0 rgba(255,70,70,.22),-.7px 0 rgba(70,150,255,.22)}
+.pg.leftpage{background:linear-gradient(90deg,#14141e,#101018);padding:26px 46px 22px 42px}
+.pg.rightpage{background:linear-gradient(270deg,#14141e,#101018);padding:26px 26px 22px 46px}
+.pg h3{font-family:var(--fd);font-size:1.28rem;font-weight:600;line-height:1.2;margin:8px 0 10px;letter-spacing:-.01em}
+.pg h3 em{font-style:normal;color:var(--teal)}
+.pg p{color:var(--muted);font-size:.8rem;line-height:1.6}
+.pg .chip{display:inline-block;font-family:var(--fm);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
+  border:1px solid rgba(45,212,167,.4);color:var(--teal);padding:4px 10px;border-radius:99px;margin-bottom:10px;width:fit-content}
+.pg .mini{font-family:var(--fm);font-size:.6rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+.pg a.btn{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:99px;text-decoration:none;
+  font-family:var(--fm);font-size:.68rem;letter-spacing:.08em;border:1px solid var(--line);color:var(--text);transition:.25s;width:fit-content}
+.pg a.btn:hover{transform:translateY(-2px);border-color:var(--teal);color:var(--teal)}
+.pg a.btn.solid{background:var(--teal);color:#08080d;border-color:var(--teal);font-weight:600}
+.pg a.btn.amber{border-color:rgba(232,178,58,.5);color:var(--amber)}
+.pg a.btn.amber:hover{background:var(--amber-dim)}
+.pg .stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pg .stack span{font-family:var(--fm);font-size:.58rem;color:var(--muted);border:1px solid var(--line);padding:3px 9px;border-radius:6px}
+.repo-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.repo-grid .repo{margin-top:0}
+.repo{border:1px solid var(--line);border-radius:12px;padding:9px 10px;margin-top:10px;transition:border-color .25s}
+.repo:hover{border-color:rgba(45,212,167,.4)}
+.repo .rl{font-family:var(--fm);font-size:.55rem;color:var(--teal);letter-spacing:.14em;text-transform:uppercase}
+.repo b{font-family:var(--fd);font-size:.9rem;font-weight:600;display:block;margin:3px 0}
+.repo p{font-size:.63rem !important;line-height:1.38 !important}
+
+/* real book covers inside spreads */
+.coverimg{width:100%;flex:1;min-height:0;border-radius:8px;overflow:hidden;border:1px solid var(--line);position:relative}
+.coverimg img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.coverimg::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 40px rgba(0,0,0,.45);border-radius:8px}
+.bkcap{font-family:var(--fm);font-size:.56rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin:10px 0 8px}
+.bkby{font-family:var(--fs);font-style:italic;font-size:.8rem;color:var(--amber);margin-bottom:8px}
+/* book cover faces */
+.cover-pg{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;border-radius:4px 12px 12px 4px}
+.cover-photo{background:radial-gradient(120% 90% at 30% 20%,#1b1b28,#0a0a12)}
+.cover-photo img{position:absolute;top:10px;left:10px;right:10px;width:calc(100% - 20px);height:calc(58% - 10px);object-fit:cover;object-position:top;filter:grayscale(.25) contrast(1.05);opacity:.92;border-radius:4px}
+.cover-photo .body{margin-top:300px;flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 26px;gap:6px}
+.cover-photo .body h1{font-family:var(--fd);font-weight:700;font-size:2.5rem;letter-spacing:.1em;line-height:1}
+.cover-photo .body .sub{font-family:var(--fm);font-size:.6rem;letter-spacing:.26em;color:var(--teal);text-transform:uppercase}
+.cover-photo .body .hint{font-family:var(--fm);font-size:.56rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-top:10px}
+.cover-photo::before{content:"";position:absolute;inset:10px;border:1px solid rgba(232,178,58,.35);border-radius:8px;pointer-events:none}
+.cover-philo{background:linear-gradient(160deg,#141320,#0a0a12);justify-content:center;padding:34px}
+.cover-philo .q{font-family:var(--fs);font-size:1.45rem;line-height:1.45;font-weight:400}
+.cover-philo .q em{font-style:italic;color:var(--teal)}
+.cover-philo .g{margin-top:22px;border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:10px}
+.cover-philo .g div{font-size:.64rem;color:var(--muted);line-height:1.5}
+.cover-philo .g b{color:var(--amber);font-family:var(--fm);font-weight:600;font-size:.58rem;letter-spacing:.1em;margin-right:6px}
+.cover-philo::before{content:"";position:absolute;inset:10px;border:1px solid rgba(45,212,167,.3);border-radius:8px;pointer-events:none}
+
+/* stylized book covers inside spreads */
+.bk{flex:1;border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;justify-content:space-between;padding:22px;position:relative;overflow:hidden}
+.bk::before{content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.1);border-radius:6px}
+.bk .bkn{font-family:var(--fm);font-size:.56rem;letter-spacing:.3em;color:var(--amber)}
+.bk h4{font-family:var(--fs);font-weight:600;font-size:1.7rem;line-height:1.15;margin-top:8px}
+.bk .stitch{display:flex;gap:7px;margin:12px 0}
+.bk .stitch i{width:5px;height:5px;border-radius:50%;background:var(--amber);opacity:.8}
+.bk p{font-size:.68rem !important}
+.bk .row{display:flex;gap:8px;flex-wrap:wrap}
+.bk.dark-a{background:linear-gradient(155deg,#1a1420,#0d0a12)}
+.bk.dark-b{background:linear-gradient(155deg,#101a1c,#0a1012)}
+.bk.madness{background:linear-gradient(155deg,#1c1210,#100a0a)}
+.bk.madness h4{color:#e86a4a}
+
+/* dgw browser mock */
+.mock{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:10px;flex:1;display:flex;flex-direction:column;min-height:0;background:#0b0b13}
+.mock .bar{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);font-family:var(--fm);font-size:.58rem;color:var(--muted)}
+.mock .bar i{width:8px;height:8px;border-radius:50%;background:#2a2a38}
+.mock .bar .url{margin-left:8px;background:rgba(255,255,255,.05);padding:2px 10px;border-radius:6px;color:var(--teal)}
+.mock .shot{flex:1;min-height:0;background:linear-gradient(160deg,#0f1a17,#0a0f0d);display:flex;align-items:center;justify-content:center;position:relative}
+.mock .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:.9}
+.mock .shot .ph{font-family:var(--fm);font-size:.62rem;color:var(--teal);letter-spacing:.2em;text-transform:uppercase;text-align:center;line-height:2}
+
+/* ---------- unique per-section visual motifs (covers stay plain) ---------- */
+.pg .motif{position:absolute;inset:0;pointer-events:none;z-index:0}
+.pg .pg-content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+/* Currently — network node grid: teal activity glow drifting through the nodes */
+.motif-nodes{background-image:radial-gradient(circle,rgba(45,212,167,.14) 1px,transparent 1.4px);background-size:22px 22px}
+.motif-nodes::before{content:"";position:absolute;inset:-40%;
+  background:radial-gradient(circle,rgba(45,212,167,.10) 0 55px,transparent 85px);
+  animation:node-scan 11s ease-in-out infinite}
+.motif-nodes::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 46%,rgba(45,212,167,.06) 50%,transparent 54%),
+             linear-gradient(65deg,transparent 46%,rgba(45,212,167,.05) 50%,transparent 54%)}
+/* DGW — guardian shield: ONE radar centred on the spine, sweeping across both
+   pages of the open spread (each page renders its half, origin at the gutter) */
+.motif-shield{background:
+  radial-gradient(circle at var(--radar-x) 50%,rgba(45,212,167,.10),transparent 46%),
+  repeating-radial-gradient(circle at var(--radar-x) 50%,rgba(45,212,167,.055) 0 1px,transparent 1px 38px)}
+.motif-shield::before{content:"";position:absolute;inset:0;transform-origin:var(--radar-x) 50%;
+  background:conic-gradient(from 0deg at var(--radar-x) 50%,rgba(45,212,167,.08) 0deg 42deg,transparent 42deg 360deg);
+  animation:shield-sweep 9s linear infinite}
+.pg.leftpage .motif-shield{--radar-x:100%}
+.pg.rightpage .motif-shield{--radar-x:0%}
+/* Books — stitched ruling lines: stitches running down the spine, sheen drifting */
+.motif-stitch{background:repeating-linear-gradient(0deg,transparent 0 27px,rgba(232,178,58,.07) 27px 28px)}
+.motif-stitch::before{content:"";position:absolute;left:16px;top:0;bottom:0;width:2px;
+  background:repeating-linear-gradient(180deg,rgba(232,178,58,.32) 0 4px,transparent 4px 10px);
+  animation:stitch-run 2.6s linear infinite}
+.motif-stitch::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 42%,rgba(232,178,58,.05) 50%,transparent 58%);
+  animation:stitch-sheen 9s ease-in-out infinite}
+/* M.A.D.N.E.S.S. — glyph dust drifting upward like embers, ember glow breathing */
+.motif-dust{background-image:radial-gradient(circle,rgba(232,106,74,.12) 1px,transparent 1.5px);background-size:34px 34px;background-position:12px 8px;
+  animation:dust-rise 30s linear infinite}
+.motif-dust::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 32% 72%,rgba(232,106,74,.08),transparent 55%),
+             radial-gradient(circle at 74% 28%,rgba(232,106,74,.06),transparent 50%);
+  animation:dust-breathe 10s ease-in-out infinite}
+@keyframes node-scan{0%,100%{transform:translate(-26%,-18%)}50%{transform:translate(26%,18%)}}
+@keyframes shield-sweep{to{transform:rotate(360deg)}}
+@keyframes stitch-run{to{background-position:0 10px}}
+@keyframes stitch-sheen{0%,100%{transform:translateY(-55%)}50%{transform:translateY(55%)}}
+@keyframes dust-rise{to{background-position:12px -264px}}
+@keyframes dust-breathe{50%{opacity:.4}}
+/* Trilogy — three amber points orbiting a still centre, one per volume */
+.motif-orbit::before{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:50%;
+  background:var(--amber);
+  box-shadow:82px 0 0 -1px var(--amber),-41px 71px 0 -1px rgba(232,178,58,.6),-41px -71px 0 -1px rgba(232,178,58,.32);
+  animation:orbit-spin 26s linear infinite}
+.motif-orbit::after{content:"";position:absolute;left:50%;top:50%;width:164px;height:164px;margin:-82px;border-radius:50%;
+  border:1px dashed rgba(232,178,58,.10)}
+@keyframes orbit-spin{to{transform:rotate(360deg)}}
+/* Contact — a line dropped in still water: twin ripples expanding outward */
+.motif-ripple{background-image:radial-gradient(circle,rgba(45,212,167,.12) 1px,transparent 1.5px);background-size:26px 26px}
+.motif-ripple::before,.motif-ripple::after{content:"";position:absolute;left:50%;top:46%;width:70px;height:70px;margin:-35px;border-radius:50%;
+  border:1px solid rgba(45,212,167,.28);animation:ripple-out 4.5s ease-out infinite}
+.motif-ripple::after{animation-delay:2.25s}
+@keyframes ripple-out{0%{transform:scale(.25);opacity:0}18%{opacity:.85}100%{transform:scale(4.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .motif-nodes::before,.motif-shield::before,.motif-stitch::before,.motif-stitch::after,
+  .motif-dust,.motif-dust::after,.motif-orbit::before,.motif-orbit::after,
+  .motif-ripple::before,.motif-ripple::after{animation:none}
+}
+/* ---------- custom cursor: dot + trailing ring (desktop only) ---------- */
+@media (pointer:fine){html,body,body *{cursor:none}}
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;will-change:transform}
+.cursor-dot{width:6px;height:6px;background:var(--teal);box-shadow:0 0 12px rgba(45,212,167,.9)}
+.cursor-ring{width:32px;height:32px;border:1px solid rgba(45,212,167,.55);
+  transition:width .3s ease,height .3s ease,border-color .3s ease,background-color .3s ease}
+.cursor-ring.hot{width:52px;height:52px;border-color:var(--amber);background:rgba(232,178,58,.07)}
+/* Engineering gets the code rain (added dynamically as .rainbg inside the page) */
+.rainbg{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .6s;z-index:0;pointer-events:none;mix-blend-mode:screen}
+.rainbg.on{opacity:.5}
+.rainbg.glow{filter:blur(8px);z-index:0}
+.rainbg.glow.on{opacity:.6}
+
+/* ---------- book description quote line ---------- */
+.qline{font-family:var(--fs);font-style:italic;color:var(--teal);font-size:.95rem;line-height:1.45;margin:6px 0 14px}
+
+/* ---------- SIGN THE BOOK (contact journey) ---------- */
+button.btn{background:transparent;cursor:pointer}
+.contactpg .signbook{position:absolute;inset:0;transform-origin:left center;
+  background:linear-gradient(160deg,#14141f,#0a0a12);border-radius:2px 0 0 2px;z-index:1}
+.signbook .sb-wrap{position:absolute;inset:0;padding:36px 28px 30px;display:flex;flex-direction:column;z-index:2}
+.signbook .sb-wrap>div:first-child{font-family:var(--fm);font-size:.64rem;letter-spacing:.42em;text-transform:uppercase;color:var(--teal)}
+.sb-folio{font-family:var(--fm);font-size:.6rem;letter-spacing:.3em;color:var(--muted);margin-top:14px}
+.sb-folio span{color:var(--teal)}
+.sb-ink{display:flex;gap:7px;margin:14px 0 30px;max-width:175px}
+.sb-ink i{flex:1;height:2px;border-radius:2px;background:var(--line);transition:background .5s ease,box-shadow .5s ease}
+.sb-ink i.on{background:linear-gradient(90deg,var(--teal),var(--amber));box-shadow:0 0 9px rgba(45,212,167,.4)}
+.sb-track{position:relative;flex:1;min-height:0}
+.sb-step{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateX(46px);pointer-events:none;transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .35s}
+.sb-step.on{opacity:1;transform:none;pointer-events:auto}
+.sb-step label{font-family:var(--fm);font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--teal)}
+.sb-hint{color:var(--muted);font-size:.8rem;margin:8px 0 20px;font-family:var(--fs);font-style:italic}
+.sb-step input,.sb-step textarea{background:none;border:none;border-bottom:1px solid var(--line);color:#fff;font-family:var(--fs);font-style:italic;font-size:1.02rem;padding:8px 2px;outline:none;transition:border-color .3s;width:72%;resize:none}
+.sb-step input:focus,.sb-step textarea:focus{border-color:var(--teal)}
+.sb-step input::placeholder,.sb-step textarea::placeholder{color:#3f3f52;font-style:italic}
+.sb-err{min-height:18px;font-size:.66rem;color:var(--amber);font-style:italic;margin-top:8px;font-family:var(--fs)}
+.sb-step.bad input,.sb-step.bad textarea{border-color:var(--amber)}
+.sb-step>.btn{margin-top:auto;align-self:flex-start}
+.sb-row{display:flex;gap:12px;margin-top:auto;align-items:center}
+.sb-row .btn{margin-top:0}
+.signbook .btn{padding:10px 20px;font-size:.68rem;letter-spacing:.14em}
+.signbook .btn.amber:hover{background:rgba(232,178,58,.12);color:var(--amber);border-color:var(--amber)}
+.sb-seal{position:absolute;left:50%;top:44%;width:78px;height:78px;border-radius:50%;transform:translate(-50%,-50%) scale(2.8);opacity:0;pointer-events:none;z-index:6;
+  background:radial-gradient(circle at 34% 30%,#b03535,#6a1616 55%,#420e0e);
+  box-shadow:0 8px 26px rgba(0,0,0,.65),inset 0 2px 8px rgba(255,255,255,.16),0 0 0 6px rgba(106,22,22,.18)}
+.sb-seal::after{content:"M.W.";position:absolute;inset:0;display:grid;place-items:center;color:rgba(240,205,130,.92);font-family:var(--fs);font-size:1rem;letter-spacing:.06em}
+.sb-seal.stamp{animation:seal-stamp .75s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes seal-stamp{0%{opacity:0;transform:translate(-50%,-50%) scale(2.8) rotate(-16deg)}55%{opacity:1;transform:translate(-50%,-50%) scale(.9) rotate(4deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+.signbook.folding{transform:scaleX(.42) scaleY(.9);transition:transform .9s cubic-bezier(.5,0,.75,0)}
+.signbook.flying{transform:scaleX(.42) scaleY(.9) translateY(-78vh) rotate(10deg);opacity:0;transition:transform .8s cubic-bezier(.4,0,.6,1),opacity .8s}
+.signbook.gone{opacity:0;visibility:hidden}
+.sb-done{position:absolute;inset:0;padding:32px 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;transition:opacity .8s .1s;z-index:3}
+.sb-done.on{opacity:1;pointer-events:auto}
+.sb-quote{font-family:var(--fs);font-style:italic;font-size:.95rem;color:#fff;margin-top:14px;line-height:1.45}
+.sb-done .btn{margin-top:26px}
+/* ---------- notify line (Book III page) ---------- */
+.notify{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
+.notify input{background:none;border:none;border-bottom:1px solid var(--line);color:#fff;font-family:var(--fs);font-style:italic;font-size:.85rem;padding:6px 2px;outline:none;flex:1;min-width:130px;transition:border-color .3s}
+.notify input:focus{border-color:var(--teal)}
+.notify input::placeholder{color:#3f3f52;font-style:italic}
+.notify .btn{padding:8px 16px;font-size:.66rem}
+.notify-msg{font-family:var(--fs);font-style:italic;font-size:.72rem;color:var(--teal);margin-top:8px;min-height:1em}
+.notify-msg.bad{color:var(--amber)}
+/* ---------- colophon ---------- */
+.c-foot{font-family:var(--fm);font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;text-align:center;margin-top:34px;line-height:2}
+/* ---------- flat (mobile) contact form ---------- */
+.fform{max-width:560px;margin-top:26px;display:flex;flex-direction:column;gap:10px}
+.fform input,.fform textarea{background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font-family:var(--fb);font-size:.9rem;padding:12px 14px;outline:none;resize:vertical}
+.fform input:focus,.fform textarea:focus{border-color:var(--teal)}
+.fform .btn{align-self:flex-start;cursor:pointer}
+.fnote{color:var(--teal);font-family:var(--fs);font-style:italic;font-size:.85rem;min-height:1.2em}
+.fsocials{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+
+/* floor shadow */
+.floor-shadow{position:absolute;left:50%;bottom:-70px;width:120%;height:60px;transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(0,0,0,.65),transparent 70%);filter:blur(8px)}
+
+/* flat fallback (mobile) */
+#flat{display:none}
+body.flat .scene,body.flat #journey,body.flat #hero{display:none}
+body.flat #flat{display:block;position:relative;z-index:10;padding:100px 6vw 40px}
+#flat section{margin-bottom:80px}
+#flat h2{font-family:var(--fd);font-weight:600;font-size:clamp(1.7rem,6vw,2.4rem);margin-bottom:16px;letter-spacing:-.02em}
+#flat h2 em{font-style:normal;color:var(--teal)}
+#flat .lead{color:var(--muted);margin-bottom:20px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:16px}
+.fcard h4{font-family:var(--fd);font-weight:600;margin-bottom:6px}
+.fcard p{color:var(--muted);font-size:.88rem}
+.fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:99px;text-decoration:none;
+  font-family:var(--fm);font-size:.74rem;letter-spacing:.08em;border:1px solid var(--line);color:var(--text);transition:.25s}
+.btn:hover{transform:translateY(-2px);border-color:var(--teal);color:var(--teal)}
+.btn.solid{background:var(--teal);color:#08080d;border-color:var(--teal);font-weight:600}
+.btn.amber{border-color:rgba(232,178,58,.5);color:var(--amber)}
+/* lenis smooth scroll (igloo-style easing) */
+html.lenis,.lenis{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:hidden}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<nav>
+  <a class="logo" data-nav="top">MAXIMUS<span>.</span></a>
+  <ul class="navlinks">
+    <li><a data-nav="now">Now</a></li>
+    <li><a data-nav="engineering">Engineering</a></li>
+    <li><a data-nav="writing">Writing</a></li>
+    <li><a data-nav="philosophy">Philosophy</a></li>
+    <li><a data-nav="contact">Contact</a></li>
+  </ul>
+</nav>
+
+<button id="audioBtn" aria-label="Toggle theme music">
+  <svg class="note" viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+  <span class="bars"><i></i><i></i><i></i></span>
+</button>
+<button id="loopBtn" aria-label="Toggle infinite loop" title="Loop: on">
+  <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+</button>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-ui">
+    <div class="hero-top"><span>MAX WIGMAN — PORTFOLIO</span><span>EST. INTENT · CONSEQUENCE · RESILIENCE</span></div>
+    <div class="hero-bottom">Scroll to open the book ↓</div>
+  </div>
+</div>
+
+<!-- 3D BOOK -->
+	<div class="scene" id="scene">
+	  <div class="book" id="book">
+	    <div class="pageblock"></div>
+
+    <!-- leaf 5 : the trilogy (front) / SIGN THE BOOK (back) -->
+    <div class="leaf" id="leaf5" style="transform:translateZ(1.5px)">
+      <div class="face front"><div class="pg rightpage">
+        <div class="motif motif-orbit"></div>
+        <div class="pg-content">
+        <div class="mini" style="color:var(--amber)">&ldquo;Trying to fail and succeeding&rdquo;</div>
+        <h3 style="margin-top:12px">Three books on why we do what we do, <em style="color:var(--amber)">what it costs us, and what it makes of us.</em></h3>
+        <p>A nonfiction trilogy of intention, consequence, and resilience &mdash; psychology and systems thinking written with a narrative, poetic cadence.</p>
+        </div>
+      </div></div>
+      <div class="face back"><div class="pg leftpage contactpg">
+        <div class="motif motif-ripple"></div>
+        <div class="signbook" id="sbPage">
+          <div class="sb-wrap">
+            <div class="mini" style="color:var(--teal)">DROP A MESSAGE</div>
+            <div class="sb-folio"><span id="sbNum">01</span>&thinsp;/&thinsp;03</div>
+            <div class="sb-ink"><i></i><i></i><i></i></div>
+            <form id="sbForm" class="sb-track" action="https://docs.google.com/forms/d/e/1FAIpQLSe0REBeHVOdOzmijkk9eNNuIAmNh6HJibdKddoYOgTPXx8agg/formResponse" method="POST" target="sbFrame" novalidate>
+              <div class="sb-step" data-step="1">
+                <label>Signed</label>
+                <p class="sb-hint">Who&rsquo;s writing?</p>
+                <input type="text" name="entry.2005620554" id="sbName" placeholder="your name" autocomplete="name">
+                <div class="sb-err" id="sbErr1"></div>
+                <button type="button" class="btn amber sb-next">Next &#8594;</button>
+              </div>
+              <div class="sb-step" data-step="2">
+                <label>Addressed</label>
+                <p class="sb-hint">Where should the reply go?</p>
+                <input type="email" name="entry.1045781291" id="sbEmail" placeholder="you@email.com" autocomplete="email">
+                <div class="sb-err" id="sbErr2"></div>
+                <div class="sb-row">
+                  <button type="button" class="btn sb-back">&#8592;&nbsp;Back</button>
+                  <button type="button" class="btn amber sb-next">Next &#8594;</button>
+                </div>
+              </div>
+              <div class="sb-step" data-step="3">
+                <label>Written</label>
+                <p class="sb-hint">What do you want to say?</p>
+                <textarea name="entry.1065046570" id="sbMsg" rows="4" placeholder="your message"></textarea>
+                <div class="sb-err" id="sbErr3"></div>
+                <div class="sb-row">
+                  <button type="button" class="btn sb-back">&#8592;&nbsp;Back</button>
+                  <button type="submit" class="btn amber">Seal &amp; Send &#10022;</button>
+                </div>
+              </div>
+            </form>
+            <div class="sb-seal" id="sbSeal"></div>
+          </div>
+        </div>
+        <div class="sb-done" id="sbDone">
+          <div class="mini" style="color:var(--teal)">SEALED</div>
+          <p class="sb-quote">&ldquo;Sealed &mdash; I&rsquo;ll reply within a day or two.&rdquo;</p>
+          <p class="mini" style="margin-top:10px">This page intentionally left blank.</p>
+          <button type="button" class="btn" id="sbAgain" style="pointer-events:auto;margin-top:26px">Send another &#8635;</button>
+        </div>
+        <iframe name="sbFrame" id="sbFrame" title="form-submit" style="position:absolute;width:0;height:0;border:0;opacity:0"></iframe>
+      </div></div>
+    </div>
+
+    <!-- leaf 4 : Book II description (front) / Book III (back) -->
+    <div class="leaf" id="leaf4" style="transform:translateZ(2.5px)">
+      <div class="face front"><div class="pg rightpage">
+        <div class="motif motif-dust"></div>
+        <div class="pg-content">
+        <h3>A Burden of <em>One's Choice</em></h3>
+        <p class="qline">&ldquo;What if the weight you carry isn&rsquo;t what breaks you &mdash; but what shapes you?&rdquo;</p>
+        <p>A lyrical journey into autonomy, adversity, and transformation &mdash; the tension between control and surrender, ripple and consequence, scar and wisdom. Each chapter unfolds like a stitch: not to conceal rupture, but to reveal how chosen burdens reshape us from within.</p>
+        <p class="mini">With QR-linked shadow texts, spiral acrostics, and tactile print overlays, it dissolves the boundary between reader and page.</p>
+        </div>
+      </div></div>
+      <div class="face back"><div class="pg leftpage">
+        <div class="motif motif-dust"></div>
+        <div class="pg-content">
+        <div class="coverimg"><img src="assets/madness.png" alt="This Is M.A.D.N.E.S.S. cover"></div>
+        <div class="bkcap">Book III &mdash; on resilience</div>
+        <div class="bkby">M.W.E. Wigman</div>
+        <form class="notify" id="notifyForm" action="https://docs.google.com/forms/d/e/1FAIpQLSe0REBeHVOdOzmijkk9eNNuIAmNh6HJibdKddoYOgTPXx8agg/formResponse" method="POST" target="sbFrame" novalidate>
+          <input type="email" name="entry.1045781291" id="notifyEmail" placeholder="your email — get notified" autocomplete="email">
+          <input type="hidden" name="entry.2005620554" value="Book III notify">
+          <input type="hidden" name="entry.1065046570" value="Book III notification signup">
+          <button type="submit" class="btn amber notify-go">Notify me &#10022;</button>
+        </form>
+        <p class="notify-msg" id="notifyMsg"></p>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- base : colophon + socials (front) / philosophy (back, unchanged) -->
+    <div class="base" id="baseHalf" style="transform:translateZ(0.5px)">
+      <div class="face front"><div class="pg rightpage colophon" style="position:absolute;inset:0">
+        <div class="motif motif-nodes"></div>
+        <div class="pg-content">
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/max-wigman-61a19a22b" aria-label="LinkedIn" style="pointer-events:auto"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.2 8h4.6v14H.2V8zm7.6 0h4.4v1.9h.1c.6-1.2 2.1-2.4 4.4-2.4 4.7 0 5.6 3.1 5.6 7.1V22h-4.7v-6.5c0-1.6 0-3.6-2.2-3.6s-2.6 1.7-2.6 3.5V22H7.8V8z"/></svg></a>
+          <a href="https://www.youtube.com/@wigmanpublishers" aria-label="YouTube" style="pointer-events:auto"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.582 6.186c-.23-.86-.908-1.538-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418c-.86.23-1.538.908-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814c.23.86.908 1.538 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418c.861-.23 1.538-.908 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15.464V8.536L16 12l-6 3.464z"/></svg></a>
+          <a href="https://www.threads.com/@m.w.e_wigman" aria-label="Threads" style="pointer-events:auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="11" r="6.3"/><circle cx="12" cy="11" r="2.4"/><path d="M12 4.7v12.6"/><path d="M12 17.3c0 2 1.3 3.2 3.2 3.2"/></svg></a>
+          <a href="https://instagram.com/m.w.e_wigman" aria-label="Instagram" style="pointer-events:auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://bsky.app/profile/mwewigman.bsky.social" aria-label="Bluesky" style="pointer-events:auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5C10 4.5 6.8 3.2 4.6 3.9 2.9 4.4 2.3 6 3 8c.6 1.7 2.2 2.9 4.1 3.1"/><path d="M12 7.5c2-3 5.2-4.3 7.4-3.6 1.7.5 2.3 2.1 1.6 4.1-.6 1.7-2.2 2.9-4.1 3.1"/><path d="M12 7.5v13"/><path d="M12 12.5c-1.7.3-2.9 1.2-3.3 2.8.8 1.7 1.9 2.6 3.3 3.2"/><path d="M12 12.5c1.7.3 2.9 1.2 3.3 2.8-.8 1.7-1.9 2.6-3.3 3.2"/></svg></a>
+        </div>
+        <p class="c-foot">&copy; 2026 MAXIMUS<br>MADE WITH OPEN-SOURCE TOOLS</p>
+        </div>
+      </div></div>
+      <div class="face back"><div class="pg leftpage bcpg">
+        <div class="back-copy">
+          <div class="mini" style="color:var(--teal)">PHILOSOPHY</div>
+          <div class="q" style="margin-top:14px">"The best things in life are free — <em>open-source software, shared knowledge,</em> and community-driven innovation."</div>
+          <div class="g">
+            <div><b>01</b>Open Source &amp; Free Resources — break down barriers for everyone.</div>
+            <div><b>02</b>Democratizing Technology — inclusive, never exclusive.</div>
+            <div><b>03</b>Learning &amp; Sharing — progress is collaborative.</div>
+            <div><b>04</b>Wellness by Design — protect attention, never harvest it.</div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- leaf 3 : Book I description (front) / A Burden (back) -->
+    <div class="leaf" id="leaf3" style="transform:translateZ(3px)">
+      <div class="face front"><div class="pg rightpage">
+        <div class="motif motif-stitch"></div>
+        <div class="pg-content">
+        <h3>The <em>Nine Stitches</em></h3>
+        <p class="qline">&ldquo;We often meet our destiny along the path we chose to avoid it.&rdquo;</p>
+        <p>A compact philosophical reflection on failure, intention, and the quiet tension between self and system &mdash; four chapters of personal reflection, metaphysical inquiry, and thematic minimalism, written for those who value depth over scale.</p>
+        <p class="mini">Not mass-market. A quiet invitation to think.</p>
+        </div>
+      </div></div>
+      <div class="face back"><div class="pg leftpage">
+        <div class="motif motif-dust"></div>
+        <div class="pg-content">
+        <div class="coverimg"><img src="assets/burden.jpg" alt="A Burden of One's Choice cover"></div>
+        <div class="bkcap">Book II &mdash; on consequence</div>
+        <div class="bkby">M.W.E. Wigman</div>
+        <div style="display:flex;gap:8px">
+          <a class="btn amber" href="https://www.amazon.com/gp/product/B0FQ4G4SLD?storeType=ebooks" style="pointer-events:auto">Amazon &#8599;</a>
+          <span class="btn amber" style="opacity:.55;cursor:default;pointer-events:none">Books2Read &mdash; soon</span>
+        </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- leaf 2 : LEFT-C front / RIGHT-B back -->
+    <div class="leaf" id="leaf2" style="transform:translateZ(4.5px)">
+	      <div class="face front"><div class="pg rightpage">
+        <canvas class="rainbg" id="rainEngL"></canvas>
+        <div class="pg-content">
+        <span class="chip">Some Projects</span>
+	        <h3>github.com/<em>iyeque</em></h3>
+	        <div class="repo-grid">
+	          <a class="repo" href="https://github.com/iyeque/ig-autobot" style="text-decoration:none;color:inherit;pointer-events:auto"><div class="rl">Automation · Social</div><b>ig-autobot</b><p>Book-aware automation for a thoughtful, visually consistent presence.</p></a>
+	          <a class="repo" href="https://github.com/iyeque/whatsapp-bot" style="text-decoration:none;color:inherit;pointer-events:auto"><div class="rl">Automation · Messaging</div><b>whatsapp-bot</b><p>Messaging automation built to turn repetitive conversations into useful flows.</p></a>
+	          <a class="repo" href="https://github.com/iyeque/openclaw-skills" style="text-decoration:none;color:inherit;pointer-events:auto"><div class="rl">Open Source · Privacy</div><b>openclaw-skills</b><p>Security-reviewed local skills for audio, search, devices, diagnostics, and PDFs.</p></a>
+	          <a class="repo" href="https://github.com/iyeque/traider" style="text-decoration:none;color:inherit;pointer-events:auto"><div class="rl">AI · Finance</div><b>traider</b><p>Crypto-trading bot with RSI, breakouts, grid logic, news sentiment, and backtesting.</p></a>
+	        </div>
+	        <div class="stack"><span>Full-Stack Dev</span><span>Open Source</span><span>Privacy Eng</span><span>Automation</span><span>System Design</span><span>Web Platforms</span></div>
+        </div>
+      </div></div>
+    <div class="face back"><div class="pg leftpage">
+        <div class="motif motif-stitch"></div>
+        <div class="pg-content">
+        <div class="coverimg"><img src="assets/nine-stitches.jpg" alt="The Nine Stitches cover"></div>
+        <div class="bkcap">Book I — on intention</div>
+        <div class="bkby">M.W.E. Wigman</div>
+        <div style="display:flex;gap:8px">
+          <a class="btn amber" href="https://books2read.com/u/mdBLN5" style="pointer-events:auto">Books2Read ↗</a>
+        </div>
+        </div>
+      </div></div>
+      </div>
+
+    <!-- leaf 1 : LEFT-B front / RIGHT-A back -->
+    <div class="leaf" id="leaf1" style="transform:translateZ(6px)">
+      <div class="face front"><div class="pg rightpage">
+        <div class="motif motif-shield"></div>
+        <div class="pg-content">
+        <span class="chip">Full-Stack Engineer</span>
+        <h3>Digital Guardian <em>Wellness</em></h3>
+        <p>I'm the full-stack engineer behind digitalguardianwellness.org — architecting and shipping the platform end-to-end, from database schema to deployed interface. The mission: technology that protects and supports people, not just platforms that extract from them.</p>
+        <div style="flex:1"></div>
+        <a class="btn solid" href="https://digitalguardianwellness.org" style="pointer-events:auto">Visit the site ↗</a>
+        </div>
+      </div></div>
+    <div class="face back"><div class="pg leftpage" style="position:relative">
+        <canvas class="rainbg" id="rainEngR"></canvas>
+        <div class="pg-content">
+        <span class="chip">Engineering</span>
+        <h3>Code as a <em>public good</em>.</h3>
+        <p>Open source is how I vote for the kind of internet I want: free, accessible, and built for everyone. My projects live on GitHub — flip for the archive.</p>
+        <div style="flex:1"></div>
+        <p class="mini">PRIVACY · AUTOMATION · ACCESSIBILITY</p>
+        </div>
+      </div></div>
+      </div>
+
+    <!-- cover leaf 0 : COVER front / LEFT-A back -->
+    <div class="leaf" id="cover" style="transform:translateZ(7.5px)">
+      <div class="face front">
+        <div class="cover-pg cover-photo" id="coverFront">
+          <img src="assets/max.png" alt="Max Wigman">
+          <div class="body">
+            <div class="sub">Max Wigman — Engineer &amp; Author</div>
+            <h1>MAXIMUS</h1>
+            <div class="hint">Scroll to open ⟶</div>
+          </div>
+        </div>
+      </div>
+      <div class="face back"><div class="pg leftpage">
+        <div class="motif motif-shield"></div>
+        <div class="pg-content">
+        <span class="chip">Currently</span>
+        <h3>Building <em>guardianship</em> into the web.</h3>
+        <div class="mock">
+          <div class="bar"><i></i><i></i><i></i><span class="url">digitalguardianwellness.org</span></div>
+          <div class="shot">
+            <div class="ph">Digital Guardian<br>Wellness</div>
+            <img src="assets/dgw.png" alt="Digital Guardian Wellness homepage">
+          </div>
+        </div>
+        <div style="flex:1"></div>
+        <p class="mini">FLIP THE PAGE ⟶</p>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="floor-shadow"></div>
+  </div>
+</div>
+
+<!-- JOURNEY DRIVER -->
+<div id="journey"></div>
+
+<!-- FLAT FALLBACK (mobile / small screens) -->
+<div id="flat">
+  <section><div class="kicker">Currently</div><h2>Building <em>guardianship</em> into the web.</h2>
+    <div class="fcard"><span class="chip">Full-Stack Engineer</span><h4 style="margin-top:8px">Digital Guardian Wellness</h4>
+    <p>I'm the full-stack engineer behind digitalguardianwellness.org — architecting and shipping the platform end-to-end, from database schema to deployed interface.</p>
+    <div class="fbtns"><a class="btn solid" href="https://digitalguardianwellness.org">Visit the site ↗</a></div></div></section>
+  <section><div class="kicker">Engineering</div><h2>Code as a <em>public good</em>.</h2>
+    <div class="fcard"><h4>One for All</h4><p>Network-wide ad-blocking — system, network &amp; browser extensions.</p></div>
+    <div class="fcard"><h4>Exploring Automation</h4><p>Automating repetitive tasks to give people their time back.</p></div>
+    <div class="fbtns"><a class="btn" href="https://github.com/iyeque">github.com/iyeque ↗</a></div></section>
+  <section><div class="kicker" style="color:var(--amber)">Writing</div><h2>The <em style="color:var(--amber)">Trilogy</em> of Trying to Fail.</h2>
+    <div class="fcard"><img src="assets/nine-stitches.jpg" alt="The Nine Stitches cover" style="width:120px;border-radius:8px;margin-bottom:10px;border:1px solid var(--line)"><h4>The Nine Stitches · Book I</h4><p>&ldquo;We often meet our destiny along the path we chose to avoid it.&rdquo; A compact philosophical reflection on failure, intention, and the tension between self and system — four chapters for those who value depth over scale.</p>
+      <div class="fbtns"><a class="btn amber" href="https://books2read.com/u/mdBLN5">Books2Read ↗</a></div></div>
+    <div class="fcard"><img src="assets/burden.jpg" alt="A Burden of One's Choice cover" style="width:120px;border-radius:8px;margin-bottom:10px;border:1px solid var(--line)"><h4>A Burden of One's Choice · Book II</h4><p>&ldquo;What if the weight you carry isn&rsquo;t what breaks you — but what shapes you?&rdquo; A lyrical journey into autonomy, adversity, and transformation — control and surrender, ripple and consequence, scar and wisdom.</p>
+      <div class="fbtns"><a class="btn amber" href="https://www.amazon.com/gp/product/B0FQ4G4SLD?storeType=ebooks">Amazon ↗</a><span class="btn amber" style="opacity:.55;cursor:default">Books2Read — soon</span></div></div>
+    <div class="fcard"><img src="assets/madness.png" alt="This Is M.A.D.N.E.S.S. cover" style="width:120px;border-radius:8px;margin-bottom:10px;border:1px solid var(--line)"><h4>This Is M.A.D.N.E.S.S. · Book III</h4><p><i>Mutually Aided Destruction, Not Essentially Self-Sabotage.</i> In progress.</p></div></section>
+  <section><div class="kicker">The Trilogy</div><h2>Three books on why we do what we do, <em>what it costs us, and what it makes of us.</em></h2>
+    <p class="lead">A nonfiction trilogy of intention, consequence, and resilience — psychology and systems thinking written with a narrative, poetic cadence.</p></section>
+  <section><div class="kicker">Contact</div><h2>Sign the <em>book</em>.</h2>
+    <form class="fform" id="fForm" action="https://docs.google.com/forms/d/e/1FAIpQLSe0REBeHVOdOzmijkk9eNNuIAmNh6HJibdKddoYOgTPXx8agg/formResponse" method="POST" target="sbFrame" novalidate>
+      <input type="text" name="entry.2005620554" id="fName" placeholder="your name" autocomplete="name">
+      <input type="email" name="entry.1045781291" id="fEmail" placeholder="you@email.com" autocomplete="email">
+      <textarea name="entry.1065046570" id="fMsg" rows="4" placeholder="your message"></textarea>
+      <button type="submit" class="btn amber">Seal &amp; Send ✦</button>
+      <p class="fnote" id="fNote"></p>
+    </form>
+    <div class="fsocials">
+      <a class="btn" href="https://www.linkedin.com/in/max-wigman-61a19a22b">LinkedIn ↗</a>
+      <a class="btn" href="https://www.youtube.com/@wigmanpublishers">YouTube ↗</a>
+      <a class="btn" href="https://www.threads.com/@m.w.e_wigman">Threads ↗</a>
+      <a class="btn" href="https://instagram.com/m.w.e_wigman">Instagram ↗</a>
+      <a class="btn" href="https://bsky.app/profile/mwewigman.bsky.social">Bluesky ↗</a>
+    </div>
+    <p class="copy" style="margin-top:40px">© 2026 MAXIMUS · MAX WIGMAN — BUILT WITH OPEN-SOURCE TOOLS · MAXIMUS.DPDNS.ORG</p></section>
+  <section><div class="kicker">Philosophy</div><h2>The best things in life are <em>free</em>.</h2>
+    <p class="lead">Open-source software, shared knowledge, and community-driven innovation.</p>
+    <div class="fcard"><b style="color:var(--teal);font-family:var(--fm)">01</b> Open Source &amp; Free Resources — break down barriers for everyone.</div>
+    <div class="fcard"><b style="color:var(--teal);font-family:var(--fm)">02</b> Democratizing Technology — inclusive, never exclusive.</div>
+    <div class="fcard"><b style="color:var(--teal);font-family:var(--fm)">03</b> Learning &amp; Sharing — progress is collaborative.</div>
+    <div class="fcard"><b style="color:var(--teal);font-family:var(--fm)">04</b> Wellness by Design — protect attention, never harvest it.</div>
+    <p class="loop-hint">Keep scrolling — the book loops ↺</p></section>
+</div>
+
+<script>
+/* ================= CORE HELPERS ================= */
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const smooth=(p,a,b)=>{const t=clamp((p-a)/(b-a));return t*t*(3-2*t);};
+const lerp=(a,b,t)=>a+(b-a)*t;
+function checkFlat(){document.body.classList.toggle('flat',innerWidth<700);}
+checkFlat();addEventListener('resize',checkFlat);
+
+/* ================= BACKGROUND: static, light (no animation, no cursor) =====
+   The old palette/lamp was removed — the site now rests on a quiet static
+   gradient + the light film grain. */
+
+/* ================= CODE RAIN (inside Engineering page faces) ================= */
+function rain(id,chars,color){
+  const cv=document.getElementById(id);if(!cv)return;const c=cv.getContext('2d');
+  /* glow copy: same frames, blurred, behind the sharp pass — cheap fake bloom */
+  const glow=document.createElement('canvas');
+  glow.className='rainbg glow';glow.setAttribute('aria-hidden','true');
+  cv.parentNode.insertBefore(glow,cv);
+  const g=glow.getContext('2d');
+  let W,H,cols,drops;
+  function rs(){W=cv.width=cv.offsetWidth*2;H=cv.height=cv.offsetHeight*2;
+    glow.width=W;glow.height=H;
+    cols=Math.floor(W/16);drops=Array(cols).fill(0).map(()=>Math.random()*-H/16);}
+  addEventListener('resize',rs);setTimeout(rs,50);
+  setInterval(()=>{
+    if(!cv.classList.contains('on'))return;
+    c.fillStyle='rgba(10,10,16,.18)';c.fillRect(0,0,W,H);
+    c.font='13px JetBrains Mono';c.fillStyle=color;
+    drops.forEach((y,i)=>{c.fillText(chars[Math.random()*chars.length|0],i*16,y*16);
+      drops[i]=y*16>H&&Math.random()>.97?0:y+1;});
+    g.clearRect(0,0,W,H);g.drawImage(cv,0,0);      /* blurred bloom pass */
+  },70);
+}
+rain('rainEngL','01アイウ<>/{};=+#$','rgba(45,212,167,.9)');
+rain('rainEngR','{}[]();=+*#$%&','rgba(232,178,58,.85)');
+
+/* ================= SCROLL-DRIVEN BOOK ================= */
+const book=document.getElementById('book'),scene=document.getElementById('scene'),
+      cover=document.getElementById('cover'),l1=document.getElementById('leaf1'),
+      l2=document.getElementById('leaf2'),l3=document.getElementById('leaf3'),
+      l4=document.getElementById('leaf4'),l5=document.getElementById('leaf5'),
+      coverFront=document.getElementById('coverFront'),base=document.getElementById('baseHalf'),
+      prog=document.getElementById('prog'),journey=document.getElementById('journey');
+let mx=0,my=0;
+addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;});
+const PW=380;
+function update(){
+  if(document.body.classList.contains('flat'))return;
+  let p;
+  if(spinning){                                              /* the loop spin drives the pose */
+    p=spinDir>0?1-spinT:spinT;                               /* 1->0 home, 0->1 closed */
+  }else{
+    const end=journey.offsetTop+journey.offsetHeight-innerHeight;
+    p=clamp(scrollY/end);
+  }
+  window.scrollP=p;                                          /* drives aurora section tint */
+  prog.style.width=(p*100)+'%';
+
+  /* phases — six turns + close; wider ranges: each turn spans more scroll
+     distance = smoother */
+  const openA=smooth(p,.05,.20);                             // cover opens once and stays open
+  const flip1=smooth(p,.23,.35), flip2=smooth(p,.37,.48),   // engineering spread
+        flip3=smooth(p,.50,.60), flip4=smooth(p,.62,.72),   // books spreads
+        flip5=smooth(p,.74,.84);                             // contact spread
+  const OPEN=1.15;                                           // open-book scale (fills more of the screen)
+  const fit=Math.min(1,(innerWidth-32)/(860*OPEN),(innerHeight-100)/(620*OPEN));
+  const zoom=lerp(.66,OPEN,smooth(p,0,.16))*fit;             // hero .66 -> open, fit to viewport
+  const closed=1-smooth(p,.04,.14);                          // 1 = fully closed (hero)
+  const closeStart=smooth(p,.87,.95);
+
+  /* closing = the book's last page turns LEFT over the spine (real book
+     physics); the philosophy inside-back-cover is printed on its reverse.
+     The rig's z-order does the covering for free: flipped leaves land behind
+     the book plane while the flipped base lands in front (+0.5px), so the
+     turning page comes down ON TOP of the second-last page and covers it
+     progressively. Nothing fades — nothing vanishes. */
+  const baseFlip=smooth(closeStart,.08,.60);
+
+  /* book transform */
+  const tiltX=my*-7*(1-openA*.85), tiltY=mx*10*(1-openA*.85);
+  const baseY=lerp(-10,0,openA);                             // angled on table -> flat
+  const floatY=Math.sin(performance.now()*.0012)*5*closed;
+  const shiftX=lerp(-PW/2*closed,PW/2,smooth(closeStart,.08,.62));   // settle right as the page lands
+  book.style.transform=
+    `translateX(${shiftX}px) translateY(${floatY}px) scale(${zoom})`+
+    ` rotateX(${8*(1-openA)+tiltX}deg) rotateY(${baseY+tiltY}deg)`+
+    (spinning?` rotateY(${-360*spinT}deg)`:'');
+
+  cover.style.transform=`rotateY(${-180*openA}deg) translateZ(7.5px)`;
+  l1.style.transform=`rotateY(${-180*flip1}deg) translateZ(6px)`;
+  l2.style.transform=`rotateY(${-180*flip2}deg) translateZ(4.5px)`;
+  l3.style.transform=`rotateY(${-180*flip3}deg) translateZ(3px)`;
+  l4.style.transform=`rotateY(${-180*flip4}deg) translateZ(2.5px)`;
+  l5.style.transform=`rotateY(${-180*flip5}deg) translateZ(1.5px)`;
+  base.style.transform=`translateZ(0.5px) rotateY(${-180*baseFlip}deg)`;
+
+  /* chromatic aberration while any page is mid-turn (including the closing turn) */
+  const flipping=(openA>.02&&openA<.98)||(flip1>.02&&flip1<.98)||(flip2>.02&&flip2<.98)||
+                 (flip3>.02&&flip3<.98)||(flip4>.02&&flip4<.98)||(flip5>.02&&flip5<.98)||
+                 (baseFlip>.02&&baseFlip<.98);
+  book.classList.toggle('flipping',flipping);
+
+  /* the decorative page-stack backing dissolves as the last page lifts — the
+     page turns against the dark field and the closed book shows only the
+     centred back cover, with no blank panel beside it */
+  document.querySelector('.pageblock').style.opacity=String(1-smooth(closeStart,0,.22));
+
+  /* code-rain inside engineering page faces during the engineering spread
+     (spread is visible once leaf1 has flipped and leaf2 hasn't) */
+  const eng=clamp(1-Math.abs(p-.355)/.10);
+  document.querySelectorAll('.rainbg').forEach(cv=>cv.classList.toggle('on',eng>.3));
+
+  if(window.__paintBG)window.__paintBG(p);                   /* background palette follows the journey */
+}
+(function raf(){try{update();}catch(e){}requestAnimationFrame(raf);})();
+
+/* ================= SPA NAV (no reloads) ================= */
+function pToY(p){const end=journey.offsetTop+journey.offsetHeight-innerHeight;return p*end;}
+/* each point is the centre of a fully-open spread in the reading sequence */
+const navMap={top:0,now:pToY(.215),engineering:pToY(.355),writing:pToY(.49),contact:pToY(.855),philosophy:pToY(.99)};
+document.querySelectorAll('[data-nav]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const y=navMap[a.dataset.nav];
+    if(window.__lenis)window.__lenis.scrollTo(y);else window.scrollTo({top:y,behavior:'smooth'});
+  });
+});
+
+/* active nav highlight */
+const navPts=[['now',.215],['engineering',.355],['writing',.49],['contact',.855],['philosophy',1.05]];
+const endY=()=>journey.offsetTop+journey.offsetHeight-innerHeight;
+addEventListener('scroll',()=>{
+  const p=clamp(scrollY/endY());
+  let cur='';
+  navPts.forEach(([k,pp])=>{if(p>=pp-.12)cur=k;});
+  document.querySelectorAll('.navlinks a').forEach(a=>{
+    a.classList.toggle('active',a.dataset.nav===cur);
+  });
+},{passive:true});
+
+/* ================= INFINITE LOOP (igloo style) =================
+   At the closed book the page never jumps and never scrolls back — the
+   book itself spins a full 360° while its pages un-flip and it shrinks
+   back to the hero state. Only once the book is already in its final
+   pose does the scroll position snap instantly — invisible, because
+   nothing visually moves. Flat fallback keeps a plain page. */
+let lastY=scrollY,lock=false,spinning=false,spinT=0,spinDir=1;
+/* ---- loop on/off toggle (persists across visits) ---- */
+let loopOn=true;
+try{loopOn=localStorage.getItem('maximus-loop')!=='0';}catch(e){}
+const loopBtn=document.getElementById('loopBtn');
+function paintLoop(){
+  loopBtn.classList.toggle('on',loopOn);
+  loopBtn.classList.toggle('off',!loopOn);
+  loopBtn.title='Loop: '+(loopOn?'on':'off');
+}
+loopBtn.addEventListener('click',()=>{
+  loopOn=!loopOn;
+  try{localStorage.setItem('maximus-loop',loopOn?'1':'0');}catch(e){}
+  paintLoop();
+});
+paintLoop();
+/* the loop spin: the book rotates a full 360° while its pages play back
+   to the opposite end state, then the scroll snaps instantly (invisible —
+   the book is already in its final pose). spinDir 1 = home, -1 = closed. */
+function spinTo(dir){
+  if(spinning)return;
+  spinning=true;lock=true;spinDir=dir;spinT=0;
+  if(window.__lenis)window.__lenis.stop();                   /* block input mid-spin */
+  const t0=performance.now();
+  (function step(t){
+    const k=clamp((t-t0)/2800);                              /* 2.8s for the full turn */
+    spinT=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;               /* easeInOutCubic */
+    if(k<1)requestAnimationFrame(step);else finishSpin();
+  })(t0);
+}
+function finishSpin(){
+  if(!spinning)return;
+  spinning=false;
+  const max=document.documentElement.scrollHeight-innerHeight;
+  lastY=spinDir>0?0:max;                                     /* pre-seed so the snap can't re-trigger */
+  window.scrollTo(0,lastY);                                  /* instant — book already in pose */
+  if(window.__lenis)window.__lenis.start();                  /* reset() re-syncs Lenis to the new position */
+  spinT=0;lock=false;
+}
+addEventListener('scroll',()=>{
+  if(spinning){lastY=scrollY;return;}
+  if(lock||document.body.classList.contains('flat')||!loopOn){lastY=scrollY;return;}
+  const max=document.documentElement.scrollHeight-innerHeight;
+  const tol=Math.max(12,innerHeight*.02);
+  if(scrollY>=max-tol&&lastY<scrollY)spinTo(1);              /* closed book -> spin home */
+  lastY=scrollY;
+},{passive:true});
+
+/* ================= SPREAD SNAP (igloo-style) =================
+   When the wheel settles inside the journey, glide to the nearest open
+   spread so every gesture lands exactly on a page — the book feels bound.
+   Free scroll past the journey end (into contact); disabled on touch
+   devices, the flat fallback, and reduced-motion. */
+let snapTimer=null,lastPollY=0;
+const SNAP_P=[0,.215,.355,.49,.61,.73,.855,.96];
+function maybeSnap(){
+  if(!window.__lenis)return;
+  if(spinning)return;                                  /* let the spin play out */
+  if(document.body.classList.contains('flat'))return;
+  if(matchMedia('(pointer: coarse)').matches)return;
+  const end=journey.offsetTop+journey.offsetHeight-innerHeight;
+  if(scrollY>end+8)return;                        /* past the journey — free scroll */
+  const p=scrollY/end;
+  if((p>=.23&&p<=.35)||(p>=.37&&p<=.48)||(p>=.50&&p<=.60)||(p>=.62&&p<=.72)||(p>=.74&&p<=.84))return;   /* skip the snap — a leaf is mid-flip */
+  const lastTarget=SNAP_P[SNAP_P.length-1]*end;
+  if(scrollY>=lastTarget)return;                  /* closed-book segment: free scroll so the loop can fire */
+  const targets=SNAP_P.map(pp=>pp*end).concat([end]);
+  let best=targets[0],bd=Infinity;
+  targets.forEach(v=>{const d=Math.abs(v-scrollY);if(d<bd){bd=d;best=v;}});
+  if(bd<14)return;                                 /* already on a spread */
+  window.__lenis.scrollTo(best,{duration:.55,easing:t=>t*t*(3-2*t)});
+}
+addEventListener('scroll',()=>{
+  if(!window.__lenis)return;
+  clearTimeout(snapTimer);
+  if(Math.abs(scrollY-lastPollY)>60)return;   /* fast scroll — let it flow, no snap grab */
+  snapTimer=setTimeout(maybeSnap,320);
+},{passive:true});
+
+/* ================= CUSTOM CURSOR (dot + trailing ring) =================
+   Desktop only. The dot tracks the pointer exactly; the ring follows with
+   lerp lag and grows amber over interactive targets. Under reduced motion
+   the ring snaps to the pointer with no lag. */
+if(matchMedia('(pointer:fine)').matches){
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const dot=document.createElement('div'),ring=document.createElement('div');
+  dot.className='cursor-dot';ring.className='cursor-ring';
+  document.body.append(dot,ring);
+  let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+  addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+    if(reduce){rx=mx;ry=my;ring.style.transform=dot.style.transform;}
+  },{passive:true});
+  (function cursorLoop(){
+    if(!reduce){
+      rx+=(mx-rx)*.09;ry+=(my-ry)*.09;
+      ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    }
+    requestAnimationFrame(cursorLoop);
+  })();
+  document.addEventListener('mouseover',e=>{
+    ring.classList.toggle('hot',!!e.target.closest('a,button,input,textarea,[data-nav],.repo'));
+  });
+}
+
+/* ================= SIGN THE BOOK (contact journey) =================
+   Three steps — name, email, message — each sliding left over the
+   spine like a line being written. On submit: a wax seal stamps
+   down, the page tears, folds, and flies off the top; the empty
+   page shows the acknowledgment. The Google Form POSTs silently
+   into a hidden iframe so the journey never leaves the book. */
+(function(){
+  const form=document.getElementById('sbForm');if(!form)return;
+  const steps=[].slice.call(form.querySelectorAll('.sb-step'));
+  const num=document.getElementById('sbNum'),segs=[].slice.call(document.querySelectorAll('.sb-ink i'));
+  const seal=document.getElementById('sbSeal'),done=document.getElementById('sbDone');
+  const page=document.getElementById('sbPage');
+  let step=0,sent=false;
+  function show(n){
+    step=Math.max(0,Math.min(2,n));
+    steps.forEach((s,i)=>s.classList.toggle('on',i===step));
+    num.textContent='0'+(step+1);
+    segs.forEach((sg,i)=>sg.classList.toggle('on',i<=step));
+    const cur=steps[step].querySelector('input,textarea');
+    if(cur)setTimeout(()=>cur.focus(),350);
+  }
+  function setErr(n,msg){
+    document.getElementById('sbErr'+n).textContent=msg||'';
+    steps[n-1].classList.toggle('bad',!!msg);
+    return !msg;
+  }
+  steps.forEach((s,i)=>{
+    const next=s.querySelector('.sb-next'),back=s.querySelector('.sb-back');
+    if(next)next.addEventListener('click',()=>{
+      const f=s.querySelector('input,textarea');
+      if(i===0&&!f.value.trim())return setErr(1,'a name, please');
+      if(i===1&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim()))return setErr(2,'that email doesn&rsquo;t look right');
+      setErr(i+1,'');
+      show(i+1);
+    });
+    if(back)back.addEventListener('click',()=>{setErr(i+1,'');show(i-1);});
+  });
+  form.addEventListener('keydown',e=>{
+    if(e.key!=='Enter')return;
+    const s=e.target.closest('.sb-step');if(!s)return;
+    e.preventDefault();
+    const nb=s.querySelector('.sb-next');if(nb)nb.click();
+  });
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    if(sent)return;
+    const f=steps[2].querySelector('textarea');
+    if(!f.value.trim())return setErr(3,'say something — anything');
+    setErr(3,'');
+    sent=true;
+    seal.classList.add('stamp');                             /* the seal comes down */
+    setTimeout(()=>page.classList.add('folding'),650);      /* the page tears and folds */
+    setTimeout(()=>page.classList.add('flying'),1550);      /* the envelope flies off */
+    setTimeout(()=>page.classList.add('gone'),2400);        /* empty page */
+    setTimeout(()=>done.classList.add('on'),2600);          /* sealed */
+    form.submit();                                           /* silent POST to the hidden iframe */
+  });
+  document.getElementById('sbAgain').addEventListener('click',()=>{
+    sent=false;
+    form.reset();
+    page.classList.remove('folding','flying','gone');
+    seal.classList.remove('stamp');
+    done.classList.remove('on');
+    steps.forEach(s=>{s.classList.remove('bad');const e=s.querySelector('.sb-err');if(e)e.textContent='';});
+    show(0);
+  });
+  show(0);
+})();
+
+/* ================= FLAT CONTACT FORM (mobile) ================= */
+(function(){
+  const form=document.getElementById('fForm');if(!form)return;
+  const note=document.getElementById('fNote');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=document.getElementById('fName').value.trim();
+    const email=document.getElementById('fEmail').value.trim();
+    const msg=document.getElementById('fMsg').value.trim();
+    if(!name||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!msg){
+      note.textContent='name, a valid email, and a message — all three.';
+      return;
+    }
+    note.textContent='Sealed — I’ll reply within a day or two.';
+    form.submit();                                           /* silent POST to the hidden iframe */
+  });
+})();
+
+/* ================= BOOK III NOTIFY LINE ================= */
+(function(){
+  const form=document.getElementById('notifyForm');if(!form)return;
+  const msg=document.getElementById('notifyMsg');
+  const input=document.getElementById('notifyEmail');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const v=input.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+      msg.textContent='that email doesn’t look right.';
+      msg.classList.add('bad');
+      return;
+    }
+    msg.classList.remove('bad');
+    msg.textContent='Sealed — you’ll be the first to know.';
+    form.submit();                                           /* silent POST to the hidden iframe */
+    input.value='';
+  });
+})();
+
+/* ================= THEME SONG (Web Audio, synthesized) ================= */
+let actx=null,master=null,songOn=false,pluckTimer=null;
+const SCALE=[220,261.63,293.66,329.63,392,440];
+function buildAudio(){
+  actx=new (window.AudioContext||window.webkitAudioContext)();
+  master=actx.createGain();master.gain.value=0;master.connect(actx.destination);
+  /* dark pad */
+  const filt=actx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=420;filt.connect(master);
+  [[55,.5],[82.41,.35],[110,.28],[164.81,.16]].forEach(([f,g])=>{
+    const o=actx.createOscillator();o.type='sawtooth';o.frequency.value=f;o.detune.value=(Math.random()*8-4);
+    const gn=actx.createGain();gn.gain.value=g*.25;o.connect(gn);gn.connect(filt);o.start();
+  });
+  const lfo=actx.createOscillator();lfo.frequency.value=.07;
+  const lg=actx.createGain();lg.gain.value=180;lfo.connect(lg);lg.connect(filt.frequency);lfo.start();
+}
+function pluck(){
+  if(!songOn)return;
+  const f=SCALE[Math.random()*SCALE.length|0];
+  const o=actx.createOscillator();o.type='triangle';o.frequency.value=f;
+  const g=actx.createGain();const t=actx.currentTime;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.02);
+  g.gain.exponentialRampToValueAtTime(.0001,t+2.2);
+  const dl=actx.createDelay();dl.delayTime.value=.38;const fb=actx.createGain();fb.gain.value=.35;
+  o.connect(g);g.connect(master);g.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(master);
+  o.start(t);o.stop(t+2.5);
+  pluckTimer=setTimeout(pluck,900+Math.random()*2200);
+}
+document.getElementById('audioBtn').addEventListener('click',function(){
+  if(!actx)buildAudio();
+  if(actx.state==='suspended')actx.resume();
+  songOn=!songOn;this.classList.toggle('on',songOn);
+  master.gain.cancelScheduledValues(actx.currentTime);
+  master.gain.linearRampToValueAtTime(songOn?.16:0,actx.currentTime+1.2);
+  if(songOn)pluck();else clearTimeout(pluckTimer);
+});
+</script>
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+/* ================= LENIS SMOOTH SCROLL (igloo-style) =================
+   Interpolates the real scroll position with lerp easing so every page
+   turn glides instead of snapping. Falls back to native scroll if the
+   CDN is unavailable or the user prefers reduced motion. */
+(function(){
+  if(!window.Lenis)return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const lenis=new Lenis({lerp:.10,smoothWheel:true});
+  window.__lenis=lenis;
+  (function raf(t){lenis.raf(t);requestAnimationFrame(raf);})(0);
+})();
+</script>
+</body>
+</html>
